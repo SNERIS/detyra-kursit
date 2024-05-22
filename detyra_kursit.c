@@ -15,6 +15,7 @@ struct Student {
     char emri[MAX_EMRI];
     char mbiemri[MAX_EMRI];
     char ditelindja[MAX_DATA];
+    int mosha;
 };
 
 //Struktura Instruktor
@@ -42,15 +43,22 @@ struct Kurs {
 void rregjistro_Student(struct Student student) {
     if (student.id < 1 || student.id >1000) {
         printf("ID e studentit duhet te jete midis 1 dhe 1000");
+        return;
     }
+    if (student.mosha < 5 || student.mosha > 14)
+    {
+        printf("Studenti nuk mund te rregjistrohet pasi mosha e lejuar eshte 5-14 vjec!");
+        return;
+    }
+    
     FILE *file = fopen("student.dat", "ab");
     if (!file) {
         perror("Error ne hapjen e filet");
+        return;
     }
-    return;
     fwrite(&student, sizeof(struct Student), 1, file);
     fclose(file);
-    printf("Studenti u rregjistrua me sukses\n");
+    printf("Studenti u rregjistrua me sukses!\n");
 }
 
 //Funksioni per krijimin e nje instruktori te ri
@@ -65,6 +73,7 @@ void krijo_Instruktor(struct Instruktor instruktor) {
         }
         fwrite(&instruktor, sizeof(struct Instruktor), 1, file);
         fclose(file);
+        printf("Instruktori u rregjistrua me sukses!\n");
 }
 
 //Funksioni per krijimin e nje kursi
@@ -517,6 +526,8 @@ int main () {
             printf("Jepni Ditelindjen e studentit\n");
             printf("Ditelindja (dd/mm/yyyy): ");
             scanf("%s", student.ditelindja);
+            printf("Jep moshen e studentit: ");
+            scanf("%d", &student.mosha);
             rregjistro_Student(student);
             break;
     }
